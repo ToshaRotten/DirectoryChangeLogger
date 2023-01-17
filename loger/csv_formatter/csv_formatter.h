@@ -1,0 +1,14 @@
+//
+// Created by rotten on 17.01.23.
+//
+
+#ifndef DIRECTORYCHANGELOGGER_CSV_FORMATTER_H
+#define DIRECTORYCHANGELOGGER_CSV_FORMATTER_H
+
+
+class csv_formatter {
+
+};
+
+
+#endif //DIRECTORYCHANGELOGGER_CSV_FORMATTER_H

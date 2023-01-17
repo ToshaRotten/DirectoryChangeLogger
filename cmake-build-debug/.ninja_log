@@ -1,0 +1,20 @@
+# ninja log v5
+2	422	1673972485840698342	CMakeFiles/DirectoryChangeLogger.dir/loger/loger.cpp.o	f5eecb66e90a49f5
+0	25	1673978934908291935	build.ninja	4a7323ae44dd6ac4
+3	129	1673968497077920374	CMakeFiles/DirectoryChangeLogger.dir/loger/yaml_formatter/yaml_formatter.cpp.o	7cfe773169fe7752
+667	755	1673993417038093793	DirectoryChangeLogger	259f259002e06bd7
+3	128	1673968497077920374	CMakeFiles/DirectoryChangeLogger.dir/loger/csv_formatter/csv_formatter.cpp.o	f69346f29e7d16e7
+3	497	1673968497445927606	CMakeFiles/DirectoryChangeLogger.dir/loger/json_formatter/json_formatter.cpp.o	447e0d4aaa80701a
+1	667	1673993416950092041	CMakeFiles/DirectoryChangeLogger.dir/main.cpp.o	af6d85c18c171bdf
+1	698	1673995324174305393	CMakeFiles/DirectoryChangeLogger.dir/main.cpp.o	af6d85c18c171bdf
+698	783	1673995324258307116	DirectoryChangeLogger	259f259002e06bd7
+0	675	1673995452776940812	CMakeFiles/DirectoryChangeLogger.dir/main.cpp.o	af6d85c18c171bdf
+675	753	1673995452856942451	DirectoryChangeLogger	259f259002e06bd7
+1	671	1673995503541980083	CMakeFiles/DirectoryChangeLogger.dir/main.cpp.o	af6d85c18c171bdf
+672	749	1673995503617981638	DirectoryChangeLogger	259f259002e06bd7
+1	712	1673995968540039887	CMakeFiles/DirectoryChangeLogger.dir/main.cpp.o	af6d85c18c171bdf
+712	811	1673995968672042954	DirectoryChangeLogger	259f259002e06bd7
+1	668	1673996374829171943	CMakeFiles/DirectoryChangeLogger.dir/main.cpp.o	af6d85c18c171bdf
+668	769	1673996374929174134	DirectoryChangeLogger	259f259002e06bd7
+2	687	1673997052435674937	CMakeFiles/DirectoryChangeLogger.dir/main.cpp.o	af6d85c18c171bdf
+687	773	1673997052519676710	DirectoryChangeLogger	259f259002e06bd7
