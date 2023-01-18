@@ -2,6 +2,7 @@
 // Created by rotten on 17.01.23.
 //
 #include <string>
+
 #ifndef DIRECTORYCHANGELOGGER_JSON_FORMATTER_H
 #define DIRECTORYCHANGELOGGER_JSON_FORMATTER_H
 
@@ -13,16 +14,15 @@ std::string formatWithQuotes(std::string str){
     return withQuotes;
 }
 
-std::string timeTToString(std::time_t time){
-    char buf[100];
-    std::string t;
-    strftime(buf, 100, "%a %b %d %T %Y", localtime(&time));
-    t.append(buf);
-    return t;
-}
-
 class JSONFormatter {
 public:
+    std::string timeTToString(std::time_t time){
+        char buf[100];
+        std::string t;
+        strftime(buf, 100, "%a %b %d %T %Y", localtime(&time));
+        t.append(buf);
+        return t;
+    }
     std::string Serialize(std::string path, std::string msg, std::time_t time){
         std::string serialized;
         serialized.append("{");

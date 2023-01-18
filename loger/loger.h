@@ -5,33 +5,29 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
-#include <chrono>
 #include <list>
 #include "json_formatter/json_formatter.h"
+#include "csv_formatter/csv_formatter.h"
+
 #ifndef DIRECTORYCHANGELOGGER_LOGER_H
 #define DIRECTORYCHANGELOGGER_LOGER_H
 
 
-void WriteToFile(std::string path, std::string format, std::string data, std::time_t time){
+void WriteToFile(std::string path, std::string format, std::string msg, std::time_t time){
     if (format == "JSON"){
         JSONFormatter JSON;
         std::ofstream file(path + "log"+".json", std::ios::app);
         if (file.is_open()){
-            file << JSON.Serialize(path, data, time);
+            file << JSON.Serialize(path, msg, time) << "\n";
         }
         file.close();
     }
     if (format == "CSV"){
+        CSVFormatter CSV;
         std::ofstream file(path + "log"+".csv", std::ios::app);
         if (file.is_open()){
-            file << ctime(&time) << data;
+            file << CSV.Serialize(path, msg, time) << "\n";
         }
-        file.close();
-    }
-    if (format == "YAML"){
-        std::ofstream file;
-        file.open(path + "log"+".yaml");
-        file << data +"\n";
         file.close();
     }
 }
@@ -42,26 +38,26 @@ private:
     std::string Format;
     std::string Path;
     bool UseFile;
+    JSONFormatter JSON;
+    CSVFormatter CSV;
 public:
-
     Loger Configurate(std::string format, std::string path, bool useFile){
         Time = time(NULL);
         Format = format;
         Path = path;
         UseFile = useFile;
+        JSON = JSONFormatter();
+        CSV = CSVFormatter();
         return Loger();
     }
-    void Logln(std::string data, std::string name){
+    void Logln(std::string msg){
         if (this->UseFile == true){
-            WriteToFile(this->Path, this->Format, data, this->Time);
+            WriteToFile(this->Path, this->Format, msg, this->Time);
         }
-        std::cout << ctime(&Time) + data;
-    }
-    void Logln(std::string data){
-        if (this->UseFile == true){
-            WriteToFile(this->Path, this->Format, data, this->Time);
-        }
-        std::cout << ctime(&Time) + data;
+        if (this->Format == "JSON")
+            printf("%s\n",this->JSON.Serialize(this->Path, msg, this->Time).c_str());
+        if (this->Format == "CSV")
+            printf("%s\n",this->CSV.Serialize(this->Path, msg, this->Time).c_str());
     }
     //Set log format JSON, CSV, YAML
     void SetFormat(std::string format){

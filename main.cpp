@@ -1,15 +1,11 @@
-
-#define MAX_EVENTS 1024 /*Максимальное кличество событий для обработки за один раз*/
-#define LEN_NAME 16 /*Будем считать, что длина имени файла не превышает 16 символов*/
-#define EVENT_SIZE  ( sizeof (struct inotify_event) ) /*размер структуры события*/
-#define BUF_LEN     ( MAX_EVENTS * ( EVENT_SIZE + LEN_NAME )) /*буфер для хранения данных о событиях*/
+#define MAX_EVENTS 1024
+#define LEN_NAME 16
+#define EVENT_SIZE  ( sizeof (struct inotify_event) )
+#define BUF_LEN     ( MAX_EVENTS * ( EVENT_SIZE + LEN_NAME ))
 #define DEFAULT_LOG_PATH "../logs/"
-
 
 #include <errno.h>
 #include <poll.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <sys/inotify.h>
 #include <unistd.h>
 #include <string.h>
@@ -25,29 +21,29 @@ static void handle_events(int fd, int *wd, int argc, char* argv[]){
     for (;;) {
         len = read(fd, buf, sizeof(buf));
         if (len == -1 && errno != EAGAIN) {
-            loger.Logln("read");
+            printf("read");
             exit(EXIT_FAILURE);
         }
         if (len <= 0) break;
         for (char *ptr = buf; ptr < buf + len; ptr += sizeof(struct inotify_event) + event->len) {
             event = (const struct inotify_event *) ptr;
             if (event->mask & IN_CREATE && !(event->mask & IN_ISDIR)){
-                loger.Logln(event->name + std::string{" FILE IS CREATED"});
+                loger.Logln(event->name + std::string{" file is created"});
             }
             if (event->mask & IN_MODIFY && !(event->mask & IN_ISDIR)){
-                loger.Logln(event->name + std::string{" FILE IS MODIFY"});
+                loger.Logln(event->name + std::string{" file is modify"});
             }
             if (event->mask & IN_DELETE && !(event->mask & IN_ISDIR)){
-                loger.Logln(event->name + std::string{" FILE IS DELETED"});
+                loger.Logln(event->name + std::string{" file is deleted"});
             }
             if (event->mask & IN_CREATE && (event->mask & IN_ISDIR)){
-                loger.Logln(event->name + std::string{" DIR IS CREATED"});
+                loger.Logln(event->name + std::string{" directory is created"});
             }
             if (event->mask & IN_MODIFY && (event->mask & IN_ISDIR)){
-                loger.Logln(event->name + std::string{" DIR IS MODIFY"});
+                loger.Logln(event->name + std::string{" directory is modified"});
             }
             if (event->mask & IN_DELETE && (event->mask & IN_ISDIR)){
-                loger.Logln(event->name + std::string{" DIR IS DELETED"});
+                loger.Logln(event->name + std::string{" directory is deleted"});
             }
         }
     }
@@ -55,9 +51,7 @@ static void handle_events(int fd, int *wd, int argc, char* argv[]){
 
 int main(int argc, char* argv[]){
     loger.Configurate("JSON", DEFAULT_LOG_PATH, true);
-//    loger.SetFormat("CSV");
-//    loger.SetFormat("YAML");
-
+    //loger.SetFormat("CSV");
     char buf;
     int fd, i, poll_num;
     int *WatchDescriptors;
@@ -68,19 +62,18 @@ int main(int argc, char* argv[]){
         printf("Usage: %s PATH [PATH ...]\n", argv[0]);
         exit(EXIT_FAILURE);
     }
-    loger.Logln("Press ENTER key to terminate.\n");
+    printf("Press ENTER key to terminate.\n");
 
     fd = inotify_init1(IN_NONBLOCK);
     if (fd == -1) {
-        loger.Logln("inotify_init1");
+        printf("inotify_init1");
         exit(EXIT_FAILURE);
     }
     WatchDescriptors = (int*)calloc(argc, sizeof(int));
     if (WatchDescriptors == NULL) {
-        loger.Logln("calloc");
+        printf("calloc");
         exit(EXIT_FAILURE);
     }
-
     for (i = 1; i < argc; i++) {
         WatchDescriptors[i] = inotify_add_watch(fd, argv[i],IN_OPEN | IN_CLOSE | IN_CREATE | IN_MODIFY | IN_DELETE);
         if (WatchDescriptors[i] == -1) {
@@ -89,12 +82,12 @@ int main(int argc, char* argv[]){
         }
     }
     nfds = 2;
-    fds[0].fd = STDIN_FILENO;       /* Console input */
+    fds[0].fd = STDIN_FILENO;
     fds[0].events = POLLIN;
-    fds[1].fd = fd;                 /* Inotify input */
+    fds[1].fd = fd;
     fds[1].events = POLLIN;
 
-    loger.Logln("Listening for events.\n");
+    printf("Listening for events.\n");
     while (1) {
         poll_num = poll(fds, nfds, -1);
         if (poll_num == -1) {
@@ -102,20 +95,18 @@ int main(int argc, char* argv[]){
             perror("poll");
             exit(EXIT_FAILURE);
         }
-
         if (poll_num > 0) {
             if (fds[0].revents & POLLIN) {
                 while (read(STDIN_FILENO, &buf, 1) > 0 && buf != '\n') continue;
                 break;
             }
-
             if (fds[1].revents & POLLIN) {
                 handle_events(fd, WatchDescriptors, argc, argv);
             }
         }
     }
 
-    loger.Logln("Listening for events stopped.\n");
+    printf("Listening for events stopped.\n");
     close(fd);
     free(WatchDescriptors);
     exit(EXIT_SUCCESS);
